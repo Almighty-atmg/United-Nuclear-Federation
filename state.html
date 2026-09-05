@@ -152,7 +152,7 @@
             justify-content: center;
         }
 
-        /* Radiation Meter Styling */
+        /* Radiation Gauge Styling */
         .gauge-wrapper {
             position: relative;
             width: 220px;
@@ -165,7 +165,13 @@
             width: 220px;
             height: 220px;
             border-radius: 50%;
-            background: conic-gradient(from 270deg, #00ff66 0deg 90deg, #ffcc00 90deg 135deg, #ff0055 135deg 180deg);
+            /* Green: 0-120deg, Orange: 120-150deg, Red: 150-180deg */
+            background: conic-gradient(
+                from 270deg, 
+                #00ff66 0deg 120deg, 
+                #ffaa00 120deg 150deg, 
+                #ff0055 150deg 180deg
+            );
             position: absolute;
             top: 0;
             left: 0;
@@ -190,8 +196,10 @@
             left: 108px;
             transform-origin: bottom center;
             transform: rotate(-90deg);
-            transition: transform 0.5s ease-out;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            /* Smooth spring-like transition */
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+            border-radius: 2px;
         }
 
         .meter-readout {
@@ -201,6 +209,7 @@
             font-weight: bold;
             text-shadow: var(--glow);
             margin-top: 0.5rem;
+            transition: color 0.5s ease;
         }
 
         footer {
@@ -253,7 +262,7 @@
                     <div class="gauge-cover"></div>
                     <div class="needle" id="gaugeNeedle"></div>
                 </div>
-                <div class="meter-readout" id="meterReadout">3.60 mSv/h</div>
+                <div class="meter-readout" id="meterReadout">1.20 mSv/h</div>
             </div>
 
             <!-- Pie Chart Card -->
@@ -272,9 +281,9 @@
                 </div>
             </div>
 
-            <!-- Radar Chart Card -->
+            <!-- Radar Chart Card (Chamber Pressure) -->
             <div class="chart-card">
-                <div class="chart-title">Federation Integrity Index</div>
+                <div class="chart-title">4-Chamber Pressure (PSI)</div>
                 <div class="canvas-container">
                     <canvas id="radarChart"></canvas>
                 </div>
@@ -288,9 +297,11 @@
     </div>
 
     <script>
-        // Common styling
+        // Global Smooth Chart Animation Defaults
         Chart.defaults.color = '#8a99a8';
         Chart.defaults.borderColor = 'rgba(0, 255, 102, 0.1)';
+        Chart.defaults.animation.duration = 1200;
+        Chart.defaults.animation.easing = 'easeOutQuart';
 
         // 1. Pie Chart
         const ctxPie = document.getElementById('pieChart').getContext('2d');
@@ -300,7 +311,7 @@
                 labels: ['Thermal Fuel', 'Coolant Pressure', 'Graphite Rods'],
                 datasets: [{
                     data: [45, 30, 25],
-                    backgroundColor: ['#00ff66', '#00b8ff', '#ff0055']
+                    backgroundColor: ['#00ff66', '#00b8ff', '#ffaa00']
                 }]
             },
             options: { responsive: true, maintainAspectRatio: false }
@@ -311,62 +322,107 @@
         const barChart = new Chart(ctxBar, {
             type: 'bar',
             data: {
-                labels: ['Chamber 1', 'Chamber 2', 'Chamber 3', 'Chamber 4'],
+                labels: ['Sector Alpha', 'Sector Beta', 'Sector Gamma', 'Sector Delta'],
                 datasets: [{
                     label: 'Activity',
-                    data: [65, 80, 45, 90],
-                    backgroundColor: 'rgba(0, 255, 102, 0.6)',
+                    data: [72, 85, 68, 79],
+                    backgroundColor: 'rgba(0, 255, 102, 0.5)',
                     borderColor: '#00ff66',
                     borderWidth: 1
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                scales: {
+                    y: { min: 0, max: 100 }
+                }
+            }
         });
 
-        // 3. Radar Chart
+        // 3. Radar Chart (4-Chamber Pressure)
         const ctxRadar = document.getElementById('radarChart').getContext('2d');
         const radarChart = new Chart(ctxRadar, {
             type: 'radar',
             data: {
-                labels: ['Cyber Security', 'Food Stock', 'Banter Level', 'NRF Readiness', 'Tax Revenue'],
+                labels: ['Chamber 1', 'Chamber 2', 'Chamber 3', 'Chamber 4'],
                 datasets: [{
-                    label: 'Status',
-                    data: [85, 70, 95, 60, 75],
-                    backgroundColor: 'rgba(0, 255, 102, 0.2)',
+                    label: 'Pressure (PSI)',
+                    data: [85, 88, 82, 86],
+                    backgroundColor: 'rgba(0, 255, 102, 0.25)',
                     borderColor: '#00ff66',
-                    pointBackgroundColor: '#00ff66'
+                    pointBackgroundColor: '#00ff66',
+                    borderWidth: 2
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        min: 50,
+                        max: 100,
+                        ticks: { stepSize: 10, backdropColor: 'transparent' },
+                        grid: { color: 'rgba(0, 255, 102, 0.15)' },
+                        angleLines: { color: 'rgba(0, 255, 102, 0.2)' }
+                    }
+                }
+            }
         });
 
-        // Real-time Random Fluctuation Animation Loop
-        setInterval(() => {
-            // Radiation Needle & Value Update
-            const randVal = (Math.random() * 8.5 + 1.2).toFixed(2);
-            document.getElementById('meterReadout').innerText = `${randVal} mSv/h`;
+        // Smooth Telemetry Data Loop
+        function updateTelemetry() {
+            // --- Radiation Meter Logic ---
+            // Max gauge value scale is 6.0 mSv/h. 
+            // 0 - 3.3 mSv/h = Green Zone (-90deg to +10deg)
+            // 3.3 - 4.2 mSv/h = Orange Zone (+10deg to +36deg)
+            // Never reaches Red Zone (>4.5 mSv/h)
             
-            // Map 0 - 10 mSv/h to -90deg to 90deg angle
-            const angle = -90 + (randVal / 10) * 180;
+            // 85% probability to stay in green zone (0.8 - 3.2 mSv/h)
+            // 15% probability to touch slight orange zone (3.3 - 4.1 mSv/h)
+            let radVal;
+            if (Math.random() > 0.15) {
+                radVal = (Math.random() * 2.4 + 0.8).toFixed(2); // Green
+            } else {
+                radVal = (Math.random() * 0.8 + 3.3).toFixed(2); // Mild Orange
+            }
+
+            const readoutEl = document.getElementById('meterReadout');
+            readoutEl.innerText = `${radVal} mSv/h`;
+            
+            if (radVal > 3.2) {
+                readoutEl.style.color = '#ffaa00'; // Orange text hint
+            } else {
+                readoutEl.style.color = '#00ff66'; // Green text
+            }
+
+            // Angle mapping: 0 to 6 mSv/h mapped to -90deg to +90deg
+            const angle = -90 + (radVal / 6.0) * 180;
             document.getElementById('gaugeNeedle').style.transform = `rotate(${angle}deg)`;
 
-            // Update Pie Data
-            pieChart.data.datasets[0].data = [
-                Math.floor(Math.random() * 40 + 20),
-                Math.floor(Math.random() * 30 + 15),
-                Math.floor(Math.random() * 30 + 15)
+            // --- Pie Chart Update ---
+            const p1 = Math.floor(Math.random() * 10 + 40);
+            const p2 = Math.floor(Math.random() * 10 + 25);
+            const p3 = 100 - p1 - p2;
+            pieChart.data.datasets[0].data = [p1, p2, p3];
+            pieChart.update();
+
+            // --- Bar Chart Update ---
+            barChart.data.datasets[0].data = barChart.data.datasets[0].data.map(() => Math.floor(Math.random() * 20 + 70));
+            barChart.update();
+
+            // --- 4-Chamber Pressure Update (Safety range: 78 to 92 PSI) ---
+            radarChart.data.datasets[0].data = [
+                Math.floor(Math.random() * 12 + 80), // Chamber 1
+                Math.floor(Math.random() * 10 + 82), // Chamber 2
+                Math.floor(Math.random() * 12 + 78), // Chamber 3
+                Math.floor(Math.random() * 10 + 81)  // Chamber 4
             ];
-            pieChart.update('none');
+            radarChart.update();
+        }
 
-            // Update Bar Data
-            barChart.data.datasets[0].data = barChart.data.datasets[0].data.map(() => Math.floor(Math.random() * 60 + 35));
-            barChart.update('none');
-
-            // Update Radar Data
-            radarChart.data.datasets[0].data = radarChart.data.datasets[0].data.map(() => Math.floor(Math.random() * 40 + 55));
-            radarChart.update('none');
-
-        }, 1500);
+        // Run updates smoothly every 2.5 seconds
+        setInterval(updateTelemetry, 2500);
     </script>
 
     <!-- Security Module -->
