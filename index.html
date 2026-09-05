@@ -8,11 +8,11 @@
         :root {
             --bg-color: #0a0d0f;
             --card-bg: rgba(16, 23, 26, 0.85);
-            --primary-green: #00ff66;
+            --primary-yellow: #f1c40f;
             --text-main: #e0e6ed;
             --text-muted: #8a99a8;
-            --border-color: rgba(0, 255, 102, 0.2);
-            --glow: 0 0 15px rgba(0, 255, 102, 0.3);
+            --border-color: rgba(241, 196, 15, 0.25);
+            --glow: 0 0 15px rgba(241, 196, 15, 0.35);
         }
 
         * {
@@ -26,9 +26,9 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(0, 255, 102, 0.08), transparent 70%),
+                radial-gradient(circle at 50% 0%, rgba(241, 196, 15, 0.08), transparent 70%),
                 linear-gradient(rgba(10, 13, 15, 0.95), rgba(10, 13, 15, 0.95)),
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 102, 0.03) 3px, rgba(0, 255, 102, 0.03) 3px);
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(241, 196, 15, 0.03) 3px, rgba(241, 196, 15, 0.03) 3px);
             background-attachment: fixed;
             line-height: 1.6;
             padding: 2rem 1rem;
@@ -41,17 +41,33 @@
 
         header {
             text-align: center;
-            padding: 3rem 1rem 2rem;
-            border-bottom: 2px solid var(--primary-green);
+            padding: 2rem 1rem;
+            border-bottom: 2px solid var(--primary-yellow);
             margin-bottom: 2.5rem;
-            box-shadow: 0 10px 20px -10px rgba(0, 255, 102, 0.15);
+            box-shadow: 0 10px 20px -10px rgba(241, 196, 15, 0.15);
         }
 
-        .symbol {
-            font-size: 3rem;
-            color: var(--primary-green);
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .side-symbol {
+            font-size: 2.5rem;
+            color: var(--primary-yellow);
             text-shadow: var(--glow);
-            margin-bottom: 0.5rem;
+        }
+
+        .main-logo {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--primary-yellow);
+            box-shadow: var(--glow);
         }
 
         h1 {
@@ -71,7 +87,7 @@
 
         .preamble {
             background: var(--card-bg);
-            border-left: 4px solid var(--primary-green);
+            border-left: 4px solid var(--primary-yellow);
             padding: 1.5rem;
             border-radius: 4px;
             margin-bottom: 2.5rem;
@@ -80,7 +96,7 @@
         }
 
         .preamble h2 {
-            color: var(--primary-green);
+            color: var(--primary-yellow);
             font-style: normal;
             font-size: 1.1rem;
             letter-spacing: 1px;
@@ -103,12 +119,12 @@
         }
 
         .article:hover {
-            border-color: var(--primary-green);
+            border-color: var(--primary-yellow);
             transform: translateY(-2px);
         }
 
         .article-title {
-            color: var(--primary-green);
+            color: var(--primary-yellow);
             font-size: 1.2rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -130,7 +146,7 @@
         }
 
         .sec-number {
-            color: var(--primary-green);
+            color: var(--primary-yellow);
             font-weight: bold;
         }
 
@@ -157,7 +173,11 @@
 
     <div class="container">
         <header>
-            <div class="symbol">☢</div>
+            <div class="logo-container">
+                <span class="side-symbol">☢</span>
+                <img src="9-k.jpg" alt="UNF 9K Logo" class="main-logo">
+                <span class="side-symbol">☢</span>
+            </div>
             <h1>United Nuclear Federation 9-K</h1>
             <div class="subtitle">Official Digital Codex & Rules of Engagement</div>
         </header>
