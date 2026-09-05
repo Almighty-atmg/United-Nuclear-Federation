@@ -34,7 +34,7 @@ Have a great day.
         document.addEventListener("contextmenu", function (e) {
             e.preventDefault();
             if (SETTINGS.showAlertOnRightClick) {
-                alert(`DY. Diddy Protection\n\nRight click has been disabled.`);
+                alert(`United Nuclear Federation \n\nRight click has been disabled.`);
             }
         });
     }
@@ -51,7 +51,7 @@ Have a great day.
             ) {
                 e.preventDefault();
                 if (SETTINGS.showAlertOnDevTools) {
-                    alert(`DY. Diddy Protection\n\nDeveloper tools detected.`);
+                    alert(`United Nuclear Federation \n\nDeveloper tools detected.`);
                 }
             }
         });
@@ -65,7 +65,7 @@ Have a great day.
             if ((widthThreshold || heightThreshold) && !shown) {
                 shown = true;
                 if (SETTINGS.showAlertOnDevTools) {
-                    alert(`DY. Diddy Protection\n\nDeveloper tools appear to be open.`);
+                    alert(`United Nuclear Federation \n\nDeveloper tools appear to be open.`);
                 }
             }
             if (!(widthThreshold || heightThreshold)) shown = false;
