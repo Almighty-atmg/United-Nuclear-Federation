@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>United Nuclear Federation 9-K | Constitution</title>
+    <style>
+        :root {
+            --bg-color: #0a0d0f;
+            --card-bg: rgba(16, 23, 26, 0.85);
+            --primary-green: #00ff66;
+            --text-main: #e0e6ed;
+            --text-muted: #8a99a8;
+            --border-color: rgba(0, 255, 102, 0.2);
+            --glow: 0 0 15px rgba(0, 255, 102, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 255, 102, 0.08), transparent 70%),
+                linear-gradient(rgba(10, 13, 15, 0.95), rgba(10, 13, 15, 0.95)),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 102, 0.03) 3px, rgba(0, 255, 102, 0.03) 3px);
+            background-attachment: fixed;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            border-bottom: 2px solid var(--primary-green);
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 20px -10px rgba(0, 255, 102, 0.15);
+        }
+
+        .symbol {
+            font-size: 3rem;
+            color: var(--primary-green);
+            text-shadow: var(--glow);
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: var(--glow);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .preamble {
+            background: var(--card-bg);
+            border-left: 4px solid var(--primary-green);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--glow);
+            font-style: italic;
+        }
+
+        .preamble h2 {
+            color: var(--primary-green);
+            font-style: normal;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .article-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .article {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .article:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        .article-title {
+            color: var(--primary-green);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .section {
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .sec-number {
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .article-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .article-full {
+                grid-column: span 2;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="symbol">☢</div>
+            <h1>United Nuclear Federation 9-K</h1>
+            <div class="subtitle">Official Digital Codex & Rules of Engagement</div>
+        </header>
+
+        <div class="preamble">
+            <h2>Preamble</h2>
+            <p>We, the members of the United Nuclear Federation of 9K, in order to establish order, ensure maximum interaction, and promote absolute freedom of banter within our digital boundaries, do ordain and establish this Constitution.</p>
+        </div>
+
+        <div class="article-grid">
+            
+            <div class="article">
+                <div class="article-title">Article I: Jurisdiction</div>
+                <div class="section"><span class="sec-number">Sec. 1</span> This group is officially the United Nuclear Federation of 9K. These rules apply to all members and visitors.</div>
+                <div class="section"><span class="sec-number">Sec. 2</span> This Constitution is the supreme law of the chat. No decree shall contradict it.</div>
+            </div>
+
+            <div class="article">
+                <div class="article-title">Article II: Membership</div>
+                <div class="section"><span class="sec-number">Sec. 1</span> Members hold the right to participate freely within constitutional limits.</div>
+                <div class="section"><span class="sec-number">Sec. 2</span> Silence is discouraged. Members must contribute memes, opinions, or chaos to keep the Federation alive. <em>(Can be suspended during Emergency/War)</em></div>
+            </div>
+
+            <div class="article">
+                <div class="article-title">Article III: Administration</div>
+                <div class="section"><span class="sec-number">Sec. 1</span> Admins act as the executive branch to enforce rules, mediate disputes, and maintain security.</div>
+                <div class="section"><span class="sec-number">Sec. 2</span> Admins shall not abuse removal powers without just cause.</div>
+            </div>
+
+            <div class="article">
+                <div class="article-title">Article IV: Rights</div>
+                <div class="section"><span class="sec-number">Sec. 1</span> Freedom of banter is protected, including roasting and unhinged humor, barring targeted harassment.</div>
+                <div class="section"><span class="sec-number">Sec. 2</span> The sharing of quality memes and stickers is fully protected under Federation culture.</div>
+                <div class="section"><span class="sec-number">Sec. 3</span> Excessive spam, scam bots, and unformatted text walls are strictly prohibited.</div>
+            </div>
+
+            <div class="article article-full">
+                <div class="article-title">Article V: The Supreme Authority</div>
+                <div class="section"><span class="sec-number">Sec. 1</span> The Führer holds the supreme power; the other admins maintain order and discipline.</div>
+                <div class="section"><span class="sec-number">Sec. 2</span> All final decisions regarding group survival, structural changes, and pardons rest solely with the Führer.</div>
+                <div class="section"><span class="sec-number">Sec. 3</span> Admins serve at the pleasure of the Führer, while citizens fuel the chat's survival.</div>
+            </div>
+
+            <div class="article article-full">
+                <div class="article-title">Article VI: Emergency Clause</div>
+                <div class="section"><span class="sec-number">Sec. 1</span> Only Admins may invoke a State of Emergency during group crises.</div>
+                <div class="section"><span class="sec-number">Sec. 2</span> All normal chat rules are suspended until the Führer or Admins lift the decree.</div>
+            </div>
+
+        </div>
+
+        <footer>
+            PROPERTY OF THE UNITED NUCLEAR FEDERATION OF 9-K • ALL RIGHTS RESERVED
+        </footer>
+    </div>
+
+</body>
+</html>
