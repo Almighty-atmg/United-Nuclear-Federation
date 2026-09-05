@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>United Nuclear Federation 9-K | State Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #0a0d0f;
+            --card-bg: rgba(16, 23, 26, 0.85);
+            --primary-green: #00ff66;
+            --text-main: #e0e6ed;
+            --text-muted: #8a99a8;
+            --border-color: rgba(0, 255, 102, 0.2);
+            --glow: 0 0 15px rgba(0, 255, 102, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 255, 102, 0.08), transparent 70%),
+                linear-gradient(rgba(10, 13, 15, 0.95), rgba(10, 13, 15, 0.95)),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 102, 0.03) 3px, rgba(0, 255, 102, 0.03) 3px);
+            background-attachment: fixed;
+            line-height: 1.6;
+            padding: 1rem 0.75rem;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            max-width: 900px;
+            margin: 0 auto 1.5rem auto;
+            padding-top: 0.5rem;
+        }
+
+        .nav-btn {
+            background: rgba(0, 255, 102, 0.05);
+            color: var(--primary-green);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary-green);
+            color: #000;
+            box-shadow: var(--glow);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 1.5rem 0.5rem;
+            border-bottom: 2px solid var(--primary-green);
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px -10px rgba(0, 255, 102, 0.15);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .side-symbol {
+            font-size: 2rem;
+            color: var(--primary-green);
+            text-shadow: var(--glow);
+        }
+
+        .main-logo {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--primary-green);
+            box-shadow: var(--glow);
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-shadow: var(--glow);
+            word-break: break-word;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-top: 0.5rem;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chart-title {
+            color: var(--primary-green);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            width: 100%;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            max-height: 280px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Radiation Meter Styling */
+        .gauge-wrapper {
+            position: relative;
+            width: 220px;
+            height: 110px;
+            margin: 1rem auto 0 auto;
+            overflow: hidden;
+        }
+
+        .gauge-body {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: conic-gradient(from 270deg, #00ff66 0deg 90deg, #ffcc00 90deg 135deg, #ff0055 135deg 180deg);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .gauge-cover {
+            width: 170px;
+            height: 170px;
+            background: var(--bg-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 25px;
+            left: 25px;
+        }
+
+        .needle {
+            width: 4px;
+            height: 90px;
+            background: #ffffff;
+            position: absolute;
+            bottom: 0;
+            left: 108px;
+            transform-origin: bottom center;
+            transform: rotate(-90deg);
+            transition: transform 0.5s ease-out;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .meter-readout {
+            font-family: monospace;
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            font-weight: bold;
+            text-shadow: var(--glow);
+            margin-top: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        @media (min-width: 600px) {
+            header { padding: 2rem 1rem; }
+            .side-symbol { font-size: 2.5rem; }
+            .main-logo { width: 130px; height: 130px; }
+            h1 { font-size: 2.2rem; letter-spacing: 2px; }
+            .subtitle { font-size: 0.9rem; letter-spacing: 4px; }
+            .charts-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+            footer { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-btn">Rules</a>
+        <a href="posts.html" class="nav-btn">Posts</a>
+        <a href="state.html" class="nav-btn active">State</a>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <span class="side-symbol">☢</span>
+                <img src="9-k.jpg" alt="UNF 9K Logo" class="main-logo">
+                <span class="side-symbol">☢</span>
+            </div>
+            <h1>United Nuclear Federation 9-K</h1>
+            <div class="subtitle">Live System Telemetry & Radiation State</div>
+        </header>
+
+        <div class="charts-grid">
+            
+            <!-- Radiation Meter Card -->
+            <div class="chart-card">
+                <div class="chart-title">Radiation Meter (mSv/h)</div>
+                <div class="gauge-wrapper">
+                    <div class="gauge-body"></div>
+                    <div class="gauge-cover"></div>
+                    <div class="needle" id="gaugeNeedle"></div>
+                </div>
+                <div class="meter-readout" id="meterReadout">3.60 mSv/h</div>
+            </div>
+
+            <!-- Pie Chart Card -->
+            <div class="chart-card">
+                <div class="chart-title">Core Energy Output</div>
+                <div class="canvas-container">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Bar Chart Card -->
+            <div class="chart-card">
+                <div class="chart-title">Sector Activity Levels</div>
+                <div class="canvas-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Radar Chart Card -->
+            <div class="chart-card">
+                <div class="chart-title">Federation Integrity Index</div>
+                <div class="canvas-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            PROPERTY OF THE UNITED NUCLEAR FEDERATION OF 9-K • ALL RIGHTS RESERVED
+        </footer>
+    </div>
+
+    <script>
+        // Common styling
+        Chart.defaults.color = '#8a99a8';
+        Chart.defaults.borderColor = 'rgba(0, 255, 102, 0.1)';
+
+        // 1. Pie Chart
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+        const pieChart = new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: ['Thermal Fuel', 'Coolant Pressure', 'Graphite Rods'],
+                datasets: [{
+                    data: [45, 30, 25],
+                    backgroundColor: ['#00ff66', '#00b8ff', '#ff0055']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 2. Bar Chart
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Chamber 1', 'Chamber 2', 'Chamber 3', 'Chamber 4'],
+                datasets: [{
+                    label: 'Activity',
+                    data: [65, 80, 45, 90],
+                    backgroundColor: 'rgba(0, 255, 102, 0.6)',
+                    borderColor: '#00ff66',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 3. Radar Chart
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Cyber Security', 'Food Stock', 'Banter Level', 'NRF Readiness', 'Tax Revenue'],
+                datasets: [{
+                    label: 'Status',
+                    data: [85, 70, 95, 60, 75],
+                    backgroundColor: 'rgba(0, 255, 102, 0.2)',
+                    borderColor: '#00ff66',
+                    pointBackgroundColor: '#00ff66'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // Real-time Random Fluctuation Animation Loop
+        setInterval(() => {
+            // Radiation Needle & Value Update
+            const randVal = (Math.random() * 8.5 + 1.2).toFixed(2);
+            document.getElementById('meterReadout').innerText = `${randVal} mSv/h`;
+            
+            // Map 0 - 10 mSv/h to -90deg to 90deg angle
+            const angle = -90 + (randVal / 10) * 180;
+            document.getElementById('gaugeNeedle').style.transform = `rotate(${angle}deg)`;
+
+            // Update Pie Data
+            pieChart.data.datasets[0].data = [
+                Math.floor(Math.random() * 40 + 20),
+                Math.floor(Math.random() * 30 + 15),
+                Math.floor(Math.random() * 30 + 15)
+            ];
+            pieChart.update('none');
+
+            // Update Bar Data
+            barChart.data.datasets[0].data = barChart.data.datasets[0].data.map(() => Math.floor(Math.random() * 60 + 35));
+            barChart.update('none');
+
+            // Update Radar Data
+            radarChart.data.datasets[0].data = radarChart.data.datasets[0].data.map(() => Math.floor(Math.random() * 40 + 55));
+            radarChart.update('none');
+
+        }, 1500);
+    </script>
+
+    <!-- Security Module -->
+    <script src="security.js"></script>
+</body>
+</html>
